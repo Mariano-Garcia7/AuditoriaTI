@@ -1,0 +1,13 @@
+usuario,nombre_completo,correo,id_empleado,departamento,estado
+ALOPEZ,Ana López Ruiz,ana.lopez@example.com,E001,Finanzas,activo
+ALOPEZ2,Ana Lopez Ruiz,ana.lopez@example.com,E001,Finanzas,activo
+CMENDEZ,Carlos Méndez Soto,carlos.mendez@example.com,E002,Compras,activo
+C.MENDEZ,Carlos Méndez Soto,c.mendez@example.com,E002,Compras,bloqueado
+JPEREZ,Juan Pérez Gómez,juan.perez@example.com,E003,TI,activo
+JPEREZ_ADM,Juan Pérez Gómez,juan.perez@example.com,E003,TI,activo
+MGARCIA,María García Torres,maria.garcia@example.com,E004,Contabilidad,activo
+LHERNANDEZ,Luis Hernández Vega,luis.hernandez@example.com,E005,Nómina,activo
+LHERNANDEZ2,Luis Hernandez Vega,luis.hernandez2@example.com,E006,Nómina,activo
+SROMERO,Sofía Romero Díaz,sofia.romero@example.com,E007,Ventas,activo
+SROMERO2,Sofia Romero Dias,sofia.romero2@example.com,E008,Ventas,activo
+RTORRES,Roberto Torres Ibarra,roberto.torres@example.com,E009,Logística,activo
