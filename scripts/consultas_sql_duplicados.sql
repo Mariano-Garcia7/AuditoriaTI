@@ -119,3 +119,62 @@ HAVING COUNT(DISTINCT ejercicio || '/' || num_documento) > 1
 -- WHERE xblnr <> ''
 -- GROUP BY bukrs, lifnr, xblnr, wrbtr, waers
 -- HAVING COUNT(DISTINCT belnr || gjahr) > 1;
+
+
+-- =====================================================================
+-- PRUEBAS ADICIONALES (PostgreSQL)
+-- Suponen en "asientos" las columnas: fecha_registro DATE y hora_registro TIME
+-- (en SAP, los campos de captura suelen ser CPUDT y CPUTM de la cabecera).
+-- =====================================================================
+
+-- ---------------------------------------------------------------------
+-- B1. Ley de Benford: distribución del primer dígito de los importes
+-- ---------------------------------------------------------------------
+WITH d AS (
+    SELECT SUBSTRING(REGEXP_REPLACE(ABS(importe)::text, '^[0.]+', '') FROM 1 FOR 1)::int AS digito
+    FROM   asientos
+    WHERE  importe <> 0
+),
+c AS (
+    SELECT digito, COUNT(*) AS n FROM d GROUP BY digito
+)
+SELECT digito,
+       n AS observados,
+       ROUND(100.0 * n / SUM(n) OVER (), 2)   AS observado_pct,
+       ROUND(100 * LOG(1 + 1.0 / digito), 2)  AS esperado_pct
+FROM   c
+ORDER  BY digito;
+
+
+-- ---------------------------------------------------------------------
+-- H1/H2. Registros en fin de semana o fuera del horario laboral (08:00-19:00)
+-- ---------------------------------------------------------------------
+SELECT num_documento, usuario_registro, fecha_registro, hora_registro, importe,
+       CASE
+           WHEN EXTRACT(ISODOW FROM fecha_registro) IN (6, 7)
+                AND (hora_registro < TIME '08:00' OR hora_registro >= TIME '19:00')
+                THEN 'día no laboral; fuera de horario'
+           WHEN EXTRACT(ISODOW FROM fecha_registro) IN (6, 7) THEN 'día no laboral'
+           ELSE 'fuera de horario'
+       END AS motivo
+FROM   asientos
+WHERE  EXTRACT(ISODOW FROM fecha_registro) IN (6, 7)
+   OR  hora_registro < TIME '08:00'
+   OR  hora_registro >= TIME '19:00'
+ORDER  BY usuario_registro, fecha_registro, hora_registro;
+
+
+-- ---------------------------------------------------------------------
+-- H4. Resumen por usuario: porcentaje de registros fuera de horario
+-- ---------------------------------------------------------------------
+SELECT usuario_registro,
+       COUNT(*) AS registros,
+       COUNT(*) FILTER (WHERE EXTRACT(ISODOW FROM fecha_registro) IN (6, 7)
+                           OR hora_registro < TIME '08:00'
+                           OR hora_registro >= TIME '19:00') AS marcados,
+       ROUND(100.0 * COUNT(*) FILTER (WHERE EXTRACT(ISODOW FROM fecha_registro) IN (6, 7)
+                                         OR hora_registro < TIME '08:00'
+                                         OR hora_registro >= TIME '19:00') / COUNT(*), 1) AS pct_marcado
+FROM   asientos
+GROUP  BY usuario_registro
+ORDER  BY marcados DESC;
