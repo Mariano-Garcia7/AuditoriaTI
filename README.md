@@ -78,6 +78,4 @@ Cada script genera uno o más CSV con los resultados (`reporte_*.csv`).
 
 Usa estas herramientas solo con datos que tengas autorización para analizar. No subas a este repositorio datos reales de ninguna organización; el `.gitignore` excluye la carpeta `datos_reales/` y los reportes generados como medida de protección.
 
-## Ideas para ampliar
 
-Pruebas de numeración con huecos, detección de montos redondos, importes justo debajo de límites de aprobación y revisión de accesos cruzada con la matriz de segregación de funciones.
