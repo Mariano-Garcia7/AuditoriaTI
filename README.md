@@ -1,4 +1,4 @@
-# IT Audit Toolkit
+# Auditoria TI
 
 Scripts, guías y plantillas para auditoría de TI, con enfoque en ISO/IEC 27001 y entornos SAP. Combina mi experiencia en auditoría con programación para automatizar pruebas y documentar controles.
 
